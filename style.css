@@ -11,6 +11,17 @@ body{
     color:#333;
 }
 
+.error-message {
+    color: #e74c3c;
+    font-size: 0.85em;
+    display: block;
+    margin-top: 4px;
+}
+
+.input-error {
+    border-color: #e74c3c !important;
+}
+
 .container {
     display: flex;
     flex-direction: column;

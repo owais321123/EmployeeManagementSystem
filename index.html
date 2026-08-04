@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -102,7 +103,7 @@
                                     <th>Positions</th>
                                     <th>Email</th>
                                     <th>Phone</th>
-                                    <th>Status</th>
+                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -385,10 +386,14 @@
                     <label for="email">Email*</label>
                     <input type="email" id="email" required>
                 </div>
+
                 <div class="form-group">
-                    <label for="phone">Phone*</label>
-                    <input type="tel" id="phone" required>
+    <label for="phone">Phone*</label>
+    <input type="tel" id="phone" maxlength="10" pattern="[0-9]{10}"
+           placeholder="10 digit number" required>
+    <span class="error-message" id="phone-error"></span>
                 </div>
+              
                 <div class="form-row">
                     <div class="form-group">
                         <label for="department">Department*</label>
@@ -454,10 +459,14 @@
                     <label for="edit-email">Email*</label>
                     <input type="email" id="edit-email" required>
                 </div>
+
                 <div class="form-group">
-                    <label for="edit-phone">Phone*</label>
-                    <input type="tel" id="edit-phone" required>
+    <label for="edit-phone">Phone*</label>
+    <input type="tel" id="edit-phone" maxlength="10" pattern="[0-9]{10}"
+           placeholder="10 digit number" required>
+    <span class="error-message" id="edit-phone-error"></span>
                 </div>
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="edit-department">Department*</label>
@@ -714,6 +723,51 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
     <script src="assets/script.js"></script>
+
+    <script>
+(function () {
+  function attachPhoneValidation(inputId, errorId, formId) {
+    const input = document.getElementById(inputId);
+    const error = document.getElementById(errorId);
+    const form = document.getElementById(formId);
+    if (!input) return;
+
+    // Strip non-digits and cap at 10 as the user types/pastes
+    input.addEventListener('input', function () {
+      let digits = input.value.replace(/\D/g, '').slice(0, 10);
+      input.value = digits;
+      if (error) error.textContent = '';
+      input.classList.remove('input-error');
+    });
+
+    function isValid() {
+      return /^\d{10}$/.test(input.value);
+    }
+
+    input.addEventListener('blur', function () {
+      if (input.value && !isValid()) {
+        if (error) error.textContent = 'Phone number must be exactly 10 digits';
+        input.classList.add('input-error');
+      }
+    });
+
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        if (!isValid()) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (error) error.textContent = 'Phone number must be exactly 10 digits';
+          input.classList.add('input-error');
+          input.focus();
+        }
+      }, true); // capture: true runs before other submit handlers already bound to this form
+    }
+  }
+
+  attachPhoneValidation('phone', 'phone-error', 'add-employee-form');
+  attachPhoneValidation('edit-phone', 'edit-phone-error', 'edit-employee-form');
+})();
+</script>
 
 </body>
 </html>
